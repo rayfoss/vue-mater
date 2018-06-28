@@ -23,6 +23,7 @@ export default {
       set (value) {
         if (value.constructor.toString().match(/function (\w*)/)[1].toLowerCase() !== 'inputevent') {
           this.$nextTick().then(() => {
+            console.log('coo coo cachu')
             this.localValue = value
           })
         }
