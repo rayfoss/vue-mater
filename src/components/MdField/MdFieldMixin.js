@@ -1,3 +1,6 @@
+const start = Date.now()
+const UP = 1
+const DOWN = 0
 export default {
   props: {
     value: {},
@@ -12,6 +15,7 @@ export default {
   data () {
     return {
       localValue: this.value,
+      valueDirection: DOWN,
       textareaHeight: false
     }
   },
@@ -21,11 +25,12 @@ export default {
         return this.localValue
       },
       set (value) {
+        console.log(`model set ${value} ${Date.now() - start}`)
+        console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
         if (value.constructor.toString().match(/function (\w*)/)[1].toLowerCase() !== 'inputevent') {
-          this.$nextTick(() => {
-            this.localValue = value
-          })
-          this.$emit('input', value)
+          this.valueDirection = UP
+          this.$emit('input', value) // needed for autofill support
+          this.localValue = value
         }
       }
     },
@@ -71,9 +76,13 @@ export default {
       this.setMaxlength()
     },
     localValue (val) {
-      this.$emit('input', val)
+      console.log(`localValue set: ${val} ${Date.now() - start}`)
+      console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
     },
     value (val) {
+      this.valueDirection = DOWN
+      console.log(`value set ${val} ${Date.now() - start}`)
+      console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
       this.localValue = val
     }
   },

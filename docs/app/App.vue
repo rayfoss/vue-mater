@@ -1,154 +1,103 @@
 <template>
-  <div id="docs" class="container" :class="containerClass">
-    <main-header />
+  <div>
+    <h1>MdInput: {{executions}}</h1>
+    <md-field>
+      <label>Initial Value</label>
+      <md-input v-model="initial" @input="handleInput"></md-input>
+    </md-field>
+    <md-button @click="setValue">click</md-button>
+    <div>result: {{inputValue}}</div><hr>
 
-    <div class="container-wrapper md-layout-row" :class="containerClass">
-      <main-nav />
+    <md-toolbar class="md-primary">
+        <h1 class="md-title">vue-material T0-D{{yolo%10}}'s</h1>
+    </md-toolbar>
 
-      <div class="main-container" v-if="loading">
-        <code-loading>Loading page...</code-loading>
-      </div>
+     <form class="create md-layout" @submit.prevent="validateTodo">
+      <md-card class="md-layout-item md-size-50 md-small-size-100">
+        <md-card-header>
+          <div class="md-title">To-Do next: {{form.server}}</div>
+        </md-card-header>
 
-      <router-view v-else />
-    </div>
+        <md-card-content>
+          <div class="md-layout md-gutter">
+            <div class="md-layout-item md-small-size-100">
+              <md-field>
+                <label for="todo">md-input</label>
+                <md-input id="todo" v-model="form.todo" />
+              </md-field>
+              <div class="md-field md-theme-default">
+                <input id="todo" v-model="form.todo" placeholder="html input"/>
+              </div>
+            </div>
+          </div>
+        </md-card-content>
 
-    <main-footer />
-
-    <md-snackbar class="version-message" md-theme="default" :md-active.sync="message" :md-duration="Infinity">
-      <span>This site is for the Vue Material 1.0 beta.</span>
-      <div>
-        <md-button href="https://vue-material-old.netlify.com/" target="_blank">Visit old docs</md-button>
-        <md-button class="md-accent" @click="closeMessage">Dismiss</md-button>
-      </div>
-    </md-snackbar>
+        <md-card-actions>
+          <md-button type="submit" class="md-primary">Create Todo</md-button>
+        </md-card-actions>
+      </md-card>
+    </form>
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import CodeLoading from './components/CodeLoading'
-  import MainHeader from './template/MainHeader'
-  import MainNav from './template/MainNav'
-  import MainFooter from './template/MainFooter'
+import '../../dist/vue-material.min.css'
+import '../../dist/theme/default.css'
 
-  export default {
-    name: 'App',
-    components: {
-      CodeLoading,
-      MainHeader,
-      MainNav,
-      MainFooter
-    },
-    data: () => ({
-      loading: false,
-      message: false
-    }),
-    computed: {
-      ...mapState({
-        isSplash: 'splashPage'
-      }),
-      containerClass () {
-        return {
-          splash: this.isSplash
-        }
+const start = Date.now()
+
+export default {
+  name: 'TextFields',
+  data() {
+    return {
+      executions: 0,
+      initial: '',
+      inputValue: '',
+      form: {
+        todo: '',
+        server: ''
       }
-    },
-    methods: {
-      closeMessage () {
-        this.message = false
-      },
-      beforeRouteRender (to, from, next) {
-        this.loading = true
-        next()
-      },
-      afterRouteRender () {
-        this.loading = false
-      }
-    },
-    created () {
-      this.$router.beforeEach(this.beforeRouteRender)
-      this.$router.afterEach(this.afterRouteRender)
-    },
-    mounted () {
-      window.setTimeout(() => {
-        this.message = true
-      }, 2000)
     }
+  },
+  methods: {
+    setValue() {
+      console.log(`setValue set ${Date.now() - start}`)
+      this.executions++
+      this.initial = 'Set Value'
+    },
+    handleInput(val) {
+      console.log(`handleInput set ${val} ${Date.now() - start}`)
+      this.executions++
+      this.inputValue = val
+    },
+    validateTodo() {
+      this.form.server = this.form.todo
+      this.form.todo = ''
+    }
+  },
+  created() {
+    this.yolo = 0
+    setInterval(() => {
+      this.yolo++
+    }, 100)
   }
+}
 </script>
 
-<style lang="scss">
-  @import "./themes/default";
-  @import "./themes/default-dark";
-  @import "./themes/light-green";
-  @import "./themes/dark-green";
-  @import "./themes/dark";
-  @import "./themes/demo";
-
-  body {
-    height: 100%;
-  }
-</style>
-
 <style lang="scss" scoped>
-  @import "~vue-material/components/MdAnimation/variables";
-  @import "~vue-material/components/MdLayout/mixins";
-  @import "~vue-material/theme/engine";
-
-  .container {
-    min-height: 100%;
-    padding-top: 64px;
-    display: flex;
-    flex-direction: column;
-    font-family: "Roboto Mono", monospace;
-    transition: $md-transition-default;
-    transition-property: padding-top;
-
-    @include md-layout-small {
-      padding-top: 48px;
-    }
-
-    @include md-layout-xsmall {
-      padding-top: 56px;
-    }
-
-    &.splash >>> {
-      .main-header .md-toolbar-row,
-      .main-footer-container {
-        max-width: 1312px;
-        margin: 0 auto;
-      }
-    }
+.create {
+  padding: 5px;
+  background: gray;
+  & > div {
+    margin: auto;
   }
+}
 
-  .container-wrapper {
-    &:not(.splash) {
-      flex: 1;
-      padding-left: 230px !important;
-
-      @include md-layout-xsmall {
-        padding-left: 0 !important;
-      }
-    }
+.list {
+  padding: 16px;
+  .md-card {
+    width: 320px;
+    margin: 4px;
   }
-
-  .main-container {
-    flex: 1;
-    position: relative;
-    z-index: 1;
-  }
-
-  .code-loading {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-
-  .version-message {
-    .md-button:not(.md-accent) {
-      color: #fff;
-    }
-  }
+}
 </style>
