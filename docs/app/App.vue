@@ -1,15 +1,7 @@
 <template>
   <div>
-    <h1>MdInput: {{executions}}</h1>
-    <md-field>
-      <label>Initial Value</label>
-      <md-input v-model="initial" @input="handleInput"></md-input>
-    </md-field>
-    <md-button @click="setValue">click</md-button>
-    <div>result: {{inputValue}}</div><hr>
-
     <md-toolbar class="md-primary">
-        <h1 class="md-title">vue-material T0-D{{yolo%10}}'s</h1>
+        <h1 class="md-title">vue-material T0-D0's</h1>
     </md-toolbar>
 
      <form class="create md-layout" @submit.prevent="validateTodo">
@@ -37,6 +29,16 @@
         </md-card-actions>
       </md-card>
     </form>
+
+    <hr>
+
+    <h1>MdInput: {{executions}}</h1>
+    <md-field>
+      <label>Initial Value</label>
+      <md-input v-model="initial" @input="handleInput"></md-input>
+    </md-field>
+    <md-button @click="setValue">click</md-button>
+    <div>result: {{inputValue}}</div>
   </div>
 </template>
 
@@ -74,12 +76,6 @@ export default {
       this.form.server = this.form.todo
       this.form.todo = ''
     }
-  },
-  created() {
-    this.yolo = 0
-    setInterval(() => {
-      this.yolo++
-    }, 100)
   }
 }
 </script>

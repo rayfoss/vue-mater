@@ -14,7 +14,6 @@ export default {
   },
   data () {
     return {
-      localValue: this.value,
       valueDirection: DOWN,
       textareaHeight: false
     }
@@ -25,12 +24,13 @@ export default {
         return this.localValue
       },
       set (value) {
-        console.log(`model set ${value} ${Date.now() - start}`)
-        console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
         if (value.constructor.toString().match(/function (\w*)/)[1].toLowerCase() !== 'inputevent') {
           this.valueDirection = UP
+          console.log(`model set ${value} ${Date.now() - start}`)
+          console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
           this.$emit('input', value) // needed for autofill support
-          this.localValue = value
+        } else {
+          console.log('You cant block my style')
         }
       }
     },
@@ -48,6 +48,18 @@ export default {
         placeholder: this.placeholder,
         readonly: this.readonly,
         maxlength: this.maxlength
+      }
+    },
+    localValue: {
+      get () {
+        return this.value
+      },
+      set (value) {
+        console.log(`localValue set: ${value} ${Date.now() - start}`)
+        console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
+        if ( this.valueDirection === DOWN ) { // we cab emit faster in model
+          this.$emit('input', value) // needed for autofill support
+        }
       }
     }
   },
@@ -75,18 +87,11 @@ export default {
     mdCounter () {
       this.setMaxlength()
     },
-    localValue (val) { // needs to emit quickly, upstream might set
-      console.log(`localValue set: ${val} ${Date.now() - start}`)
-      console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
-      if ( this.valueDirection === DOWN ) { // we cab emit faster in model
-        this.$emit('input', val) // needed for autofill support
-      }
-    },
-    value (val) {
+    value (value) {
       this.valueDirection = DOWN
-      console.log(`value set ${val} ${Date.now() - start}`)
+      console.log(`value set ${value} ${Date.now() - start}`)
       console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
-      this.localValue = val
+      this.localValue = value
     }
   },
   methods: {
