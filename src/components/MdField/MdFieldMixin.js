@@ -1,6 +1,5 @@
 const start = Date.now()
-const UP = 1
-const DOWN = 0
+
 export default {
   props: {
     value: {},
@@ -14,7 +13,7 @@ export default {
   },
   data () {
     return {
-      valueDirection: DOWN,
+      sentValue: '',
       textareaHeight: false
     }
   },
@@ -25,9 +24,9 @@ export default {
       },
       set (value) {
         if (value.constructor.toString().match(/function (\w*)/)[1].toLowerCase() !== 'inputevent') {
-          this.valueDirection = UP
+          this.sentValue = value
           console.log(`model set ${value} ${Date.now() - start}`)
-          console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
+          console.log(`value direction ${this.sentValue} ${Date.now() - start}`)
           this.$emit('input', value) // needed for autofill support
         } else {
           console.log('You cant block my style')
@@ -52,14 +51,17 @@ export default {
     },
     localValue: {
       get () {
+        if ( this.sentValue !== this.value ) {
+          this.sentValue = this.value
+          this.$emit('input', this.value) // concession to maintain API
+        }
         return this.value
       },
       set (value) {
         console.log(`localValue set: ${value} ${Date.now() - start}`)
-        console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
-        if ( this.valueDirection === DOWN ) { // we cab emit faster in model
-          this.$emit('input', value) // needed for autofill support
-        }
+        console.log(`value direction ${this.sentValue} ${Date.now() - start}`)
+        this.sentValue = value
+        this.$emit('input', value) // needed for autofill support
       }
     }
   },
@@ -86,12 +88,6 @@ export default {
     },
     mdCounter () {
       this.setMaxlength()
-    },
-    value (value) {
-      this.valueDirection = DOWN
-      console.log(`value set ${value} ${Date.now() - start}`)
-      console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
-      this.localValue = value
     }
   },
   methods: {
