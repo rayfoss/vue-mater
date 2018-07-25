@@ -75,9 +75,12 @@ export default {
     mdCounter () {
       this.setMaxlength()
     },
-    localValue (val) {
+    localValue (val) { // needs to emit quickly, upstream might set
       console.log(`localValue set: ${val} ${Date.now() - start}`)
       console.log(`value direction ${this.valueDirection} ${Date.now() - start}`)
+      if ( this.valueDirection === DOWN ) { // we cab emit faster in model
+        this.$emit('input', val) // needed for autofill support
+      }
     },
     value (val) {
       this.valueDirection = DOWN
