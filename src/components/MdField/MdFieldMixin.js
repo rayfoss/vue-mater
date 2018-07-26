@@ -49,20 +49,14 @@ export default {
         maxlength: this.maxlength
       }
     },
-    localValue: {
-      get () {
-        if ( this.sentValue !== this.value ) {
-          this.sentValue = this.value
-          this.$emit('input', this.value) // concession to maintain API
-        }
-        return this.value
-      },
-      set (value) {
+    localValue() {
+      if ( this.sentValue !== this.value ) {
         console.log(`localValue set: ${value} ${Date.now() - start}`)
         console.log(`value direction ${this.sentValue} ${Date.now() - start}`)
-        this.sentValue = value
-        this.$emit('input', value) // needed for autofill support
+        this.sentValue = this.value
+        this.$emit('input', this.value) // concession to maintain API
       }
+      return this.value
     }
   },
   watch: {
