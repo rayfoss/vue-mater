@@ -39,6 +39,14 @@
     </md-field>
     <md-button @click="setValue">click</md-button>
     <div>result: {{inputValue}}</div>
+
+    <hr>
+
+    <h1>Non binded empty</h1>
+    <md-field>
+      <label>Initial Value</label>
+      <md-input></md-input>
+    </md-field>
   </div>
 </template>
 

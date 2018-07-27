@@ -50,8 +50,12 @@ export default {
       }
     },
     localValue() {
+      if (typeof this.value === 'undefined') {  // un data-binded case
+        return this.sentValue
+      }
+
       if ( this.sentValue !== this.value ) {
-        console.log(`localValue set: ${value} ${Date.now() - start}`)
+        console.log(`localValue set: ${this.value} ${Date.now() - start}`)
         console.log(`value direction ${this.sentValue} ${Date.now() - start}`)
         this.sentValue = this.value
         this.$emit('input', this.value) // concession to maintain API
